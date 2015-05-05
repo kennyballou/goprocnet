@@ -1,0 +1,7 @@
+*.o
+*.a
+*.so
+_obj
+_test
+_build
+_dist
