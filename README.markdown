@@ -1,5 +1,7 @@
 # goprocnet: A simpl(istic)e Golang /proc/net explorer #
 
+[![Build Status](https://travis-ci.org/kennyballou/goprocnet.svg)](https://travis-ci.org/kennyballou/goprocnet)
+
 goprocnet is a naive attempt to create something similar to `netstat` for Go. It
 will likely not be nearly as feature rich.
 
