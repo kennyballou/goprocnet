@@ -39,13 +39,13 @@ type Socket struct {
 	Name       string
 	State      string
 	LocalIP    string
-	LocalPort  string
+	LocalPort  int32
 	RemoteIP   string
-	RemotePort string
+	RemotePort int32
 }
 
 func (s Socket) String() string {
-	return fmt.Sprintf("%s\t%s\t%s\t%s\t%s:%s\t%s:%s",
+	return fmt.Sprintf("%s\t%s\t%s\t%s\t%s:%d\t%s:%d",
 		s.PID,
 		s.UID,
 		s.Bin,
@@ -139,16 +139,24 @@ func netstat(t string) ([]Socket, error) {
 
 	var sockets []Socket
 
+	mustParse := func(p string) int32 {
+		i, err := strconv.ParseInt(p, 10, 32)
+		if err != nil {
+			log.Panic(err)
+		}
+		return int32(i)
+	}
+
 	for _, line := range lines {
 		values := removeInnerSpace(strings.Split(strings.TrimSpace(line), " "))
 
 		ipPort := strings.Split(values[1], ":")
 		localIP := getIP(ipPort[0])
-		localPort := getPort(ipPort[1])
+		localPort := mustParse(getPort(ipPort[1]))
 
 		remIpPort := strings.Split(values[2], ":")
 		remoteIP := getIP(remIpPort[0])
-		remotePort := getPort(remIpPort[1])
+		remotePort := mustParse(getPort(remIpPort[1]))
 
 		state := STATE[values[3]]
 		uid := values[7]
